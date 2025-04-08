@@ -1,0 +1,23 @@
+pytest app/test/schemas/test_specie_schema.py
+
+pytest app/test/use_cases/test_specie_use_cases.py
+
+pytest app/test/routes/test_specie_routes.py
+
+pytest app/test/schemas/test_pet_schema.py
+
+pytest app/test/use_cases/test_pet_use_cases.py::test_list_pets
+pytest app/test/use_cases/test_pet_use_cases.py::test_update_pet
+pytest app/test/use_cases/test_pet_use_cases.py::test_delete_pet
+pytest app/test/use_cases/test_pet_use_cases.py::test_delete_pet_non_exist
+
+pytest app/test/schemas/test_user_schema.py
+
+pytest app/test/routes/test_user_routes.py::test_register_user_route
+pytest app/test/routes/test_user_routes.py::test_register_user_route_user_alreday_exists
+pytest app/test/routes/test_user_routes.py::test_user_login_route
+pytest app/test/routes/test_user_routes.py
+
+pytest app/test/schemas/test_user_schema.py::test_token_date
+
+pytest app/test/use_cases/test_user_use_cases.py

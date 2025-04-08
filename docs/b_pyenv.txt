@@ -1,0 +1,41 @@
+# Seguir tutorial
+# https://adizell.com/pyenv-gerenciando-versoes-python-de-forma-eficiente/
+
+
+# 1. Garanta que todas as dependências necessárias estão instaladas
+sudo apt-get update; sudo apt-get install make build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+# 2. Baixe e execute o script de instalação
+curl https://pyenv.run | bash
+
+# 3. Adicione o seguinte script no arquivo 
+vim ~/.bashrc
+# pyenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
+
+# 4. Restart shell: feche o terminal e abra novamente
+# 5. Valide a instalação
+pyenv --version
+
+
+
+# Comandos básicos
+# 1 – listar as versões de python disponíveis para download
+pyenv install -l
+
+# 2 – Instalar uma versão mais estável
+pyenv install 3.10
+
+# 3 – Mostrar versão instalada
+pyenv global
+
+# 4 – Definir uma versão
+pyenv global 3.10
+
+# 5 – Listar versões instaladas
+pyenv versions
+

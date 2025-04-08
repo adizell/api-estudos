@@ -1,0 +1,46 @@
+# Criando pasta do projeto
+mkdir rga
+
+# Navegar até a pasta
+cd rga
+
+# Iniciando Projeto
+poetry init
+
+# Criando virtual env
+python -m venv venv --prompt rga
+
+# Ativando virual env "Windows"
+venv/Scripts/activate
+
+# Instalar poetry ambiente virtual ativado
+poetry install
+
+# Instalar poetry ambiente virtual ativado no windows
+# curl -sSL https://install.python-poetry.org | python -
+
+# Atualizando dependencias
+poetry update
+
+# Atualizando dependencias
+poetry self update
+
+# Adicionar as dependencias, criando projeto
+# poetry add fastapi uvicorn sqlalchemy psycopg2-binary pytest alembic python-decouple
+# poetry add passlib python-jose  # Criptografar senhas do user
+# poetry add python-multipart  # Para lidar com a autenticação através do formulário OAuth2PasswordRequestForm
+# poetry add fastapi_pagination  # Para paginação
+# poetry add pydantic-settings
+# poetry add email-validator
+
+poetry --version
+poetry env info -p
+
+# Após criar pastas e arquivo main.py testar aplicação
+uvicorn app.main:app
+
+# Após criar Dockerfile
+docker build -t rga .
+
+# Após criar docker-compose.yml
+docker-compose run app

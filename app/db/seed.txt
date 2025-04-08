@@ -1,0 +1,14 @@
+# No terminal com o venv ativado, execute:
+python app/db/seed_permissions.py
+python app/db/seed_species.py
+python app/db/seed_categories.py
+
+
+# OU EXECUTE SCRIPT ABAIXO
+
+
+# Estando na raiz do projeto (C:\pycharm\rga-api)
+python -m app.db.seed_permissions
+python -m app.db.seed_species
+python -m app.db.seed_categories
+

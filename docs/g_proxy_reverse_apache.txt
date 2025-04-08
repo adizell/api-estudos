@@ -1,0 +1,55 @@
+# Adicione os registros de host para api.nalapide.com.br e api.rga.pet
+sudo vim /etc/hosts
+
+# Adicione as linhas:
+127.0.0.1   api.nalapide.com.br
+127.0.0.1   api.rga.pet
+
+
+########################################################################################
+# Crie os arquivos de configuração dos sites no diretório de configuração do Apache2.
+sudo vim /etc/apache2/sites-available/api.nalapide.com.br.conf
+
+<VirtualHost *:80>
+    ServerName api.nalapide.com.br
+
+    ProxyPreserveHost On
+    ProxyPass / http://localhost:8080/
+    ProxyPassReverse / http://localhost:8080/
+
+    ErrorLog ${APACHE_LOG_DIR}/api.nalapide.com.br_error.log
+    CustomLog ${APACHE_LOG_DIR}/api.nalapide.com.br_access.log combined
+</VirtualHost>
+########################################################################################
+
+
+########################################################################################
+# Repita o processo para o site api.rga.pet:
+sudo vim /etc/apache2/sites-available/api.rga.pet.conf
+
+<VirtualHost *:80>
+    ServerName api.rga.pet
+
+    ProxyPreserveHost On
+    ProxyPass / http://localhost:8000/
+    ProxyPassReverse / http://localhost:8000/
+
+    ErrorLog ${APACHE_LOG_DIR}/api.rga.pet_error.log
+    CustomLog ${APACHE_LOG_DIR}/api.rga.pet_access.log combined
+</VirtualHost>
+########################################################################################
+
+
+
+# Desabilitar o arquivo de configuração padrão:
+# Execute o seguinte comando para desabilitar o arquivo 000-default.conf:
+sudo a2dissite 000-default.conf
+
+
+# Ativar os sites: Use o comando a2ensite para ativar os sites.
+sudo a2ensite api.nalapide.com.br.conf
+sudo a2ensite api.rga.pet.conf
+
+
+# Reiniciar o Apache2: Para que as alterações tenham efeito, reinicie o Apache2.
+sudo systemctl restart apache2

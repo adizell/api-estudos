@@ -1,0 +1,9 @@
+<HEADER>.<PAYLOAD>.<SIGNATURE>
+
+
+http://127.0.0.1:8000/create-url/client
+http://127.0.0.1:8000/create-jwt/client
+http://127.0.0.1:8000/update-url/client
+
+https://jwt.io/
+https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdHBwTHhFRzhtZ3JVTW1FTXRXbjRRIiwicm9sZSI6ImNsaWVudCIsImV4cCI6MTc3MzAxNDQ3MH0.R5nx1Am1n8wcArxG37tIN842iQ2sVknMApnRPl85yyQ

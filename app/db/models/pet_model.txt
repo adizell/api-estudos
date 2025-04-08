@@ -1,0 +1,8 @@
+Cachorros
+Gatos
+Aves
+Peixes
+Coelhos
+Répteis
+Anfíbios
+Outros
