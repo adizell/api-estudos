@@ -30,7 +30,6 @@ router = APIRouter()  # Esta linha é essencial!
 # Define the main router for all category routes
 category_router = APIRouter(dependencies=[Depends(get_current_user)])
 
-
 # Config for all category types
 CATEGORY_CONFIG = [
     {
