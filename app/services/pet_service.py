@@ -1,9 +1,9 @@
-# app/services/pet_services.py
+# app/services/pet_service.py
 """
-Casos de uso para operações com Pets.
+Serviço para gerenciamento de Pets.
 
-Este módulo contém a lógica de negócios relacionada à manipulação
-de entidades Pet, integrando com o banco de dados e aplicando regras de negócio.
+Este módulo implementa o serviço para operações com pets,
+incluindo criação, listagem, atualização e exclusão.
 """
 
 import datetime
@@ -19,7 +19,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.db.models.specie_model import Specie
 from app.db.models.pet_model import Pet
 from app.schemas.pet_schemas import PetUpdate, PetCreate
-from app.core.middleware.exceptions import (
+from app.core.exceptions import (
     ResourceNotFoundException,
     DatabaseOperationException,
     PermissionDeniedException,
@@ -30,17 +30,17 @@ from app.core.middleware.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class PetServices:
+class PetService:
     """
-    Casos de uso para operações com Pets.
+    Serviço para gerenciamento de Pets.
 
-    Esta classe implementa toda a lógica de negócios relacionada
-    à manipulação de entidades Pet, como adicionar, listar, atualizar e excluir.
+    Esta classe implementa a lógica de negócios relacionada à
+    manipulação de entidades Pet, como adicionar, listar, atualizar e excluir.
     """
 
     def __init__(self, db_session: Session):
         """
-        Inicializa o caso de uso com uma sessão de banco de dados.
+        Inicializa o serviço com uma sessão de banco de dados.
 
         Args:
             db_session: Sessão SQLAlchemy ativa

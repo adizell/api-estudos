@@ -14,7 +14,7 @@ from app.schemas.user_schema import (
     UserListOutput,
     UserSelfUpdate,
 )
-from app.services.user_services import UserServices
+from app.services.user_service import UserService
 from app.db.models.user.user_model import User
 from app.utils.pagination import pagination_params
 from app.security.permissions import require_superuser
@@ -22,7 +22,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/user", tags=["User"])
+router = APIRouter()
 
 
 # app/routes/user.py (verificar e ajustar o endpoint de registro)
@@ -40,7 +40,7 @@ def register_user(
         _: str = Depends(get_current_client),  # Apenas valida o token do client
 ):
     try:
-        return UserServices(db).register_user(user_input)
+        return UserService(db).register_user(user_input)
     except HTTPException as e:
         # Repassar exceções HTTP
         raise
@@ -63,7 +63,7 @@ def login_user(
         db: Session = Depends(get_session),
         _: str = Depends(get_current_client),
 ):
-    return UserServices(db).login_user(user_input)
+    return UserService(db).login_user(user_input)
 
 
 @router.get(
@@ -94,7 +94,7 @@ def update_my_data(
     Permite que o usuário atualize seus próprios dados (email e password).
     Não permite que o usuário altere seu status ativo/inativo ou permissões.
     """
-    return UserServices(db).update_self(user_id=current_user.id, data=update_data)
+    return UserService(db).update_self(user_id=current_user.id, data=update_data)
 
 
 @router.get(
@@ -109,7 +109,7 @@ def list_users(
         params: Params = Depends(pagination_params),
         order: str = Query("desc", enum=["asc", "desc"], description="Ordenação por data de criação (asc ou desc)"),
 ):
-    return UserServices(db).list_users(current_user=current_user, params=params, order=order)
+    return UserService(db).list_users(current_user=current_user, params=params, order=order)
 
 
 @router.put(
@@ -127,7 +127,7 @@ def update_user(
     """
     Permite que um superusuário atualize os dados de qualquer usuário.
     """
-    return UserServices(db).update_user(user_id=user_id, data=update_data)
+    return UserService(db).update_user(user_id=user_id, data=update_data)
 
 
 @router.delete(
@@ -152,7 +152,7 @@ def deactivate_user(
             detail="Não é possível desativar seu próprio usuário."
         )
 
-    return UserServices(db).deactivate_user(user_id=user_id)
+    return UserService(db).deactivate_user(user_id=user_id)
 
 
 @router.post(
@@ -170,7 +170,7 @@ def reactivate_user(
     """
     Reativa um usuário que estava inativo, permitindo que ele faça login novamente.
     """
-    return UserServices(db).reactivate_user(user_id=user_id)
+    return UserService(db).reactivate_user(user_id=user_id)
 
 
 @router.delete(
@@ -203,4 +203,4 @@ def delete_user_permanently(
             detail="A exclusão permanente requer confirmação explícita. Adicione ?confirm=true à URL."
         )
 
-    return UserServices(db).delete_user_permanently(user_id=user_id)
+    return UserService(db).delete_user_permanently(user_id=user_id)

@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.db.models import Client
 from app.api.deps import get_db_session
-from app.services.client_management_services import ClientManagementServices
+from app.services.client_service import ClientService
 from app.security.token_store import TokenStore
 from app.security.auth_client_manager import ClientAuthManager
 
@@ -50,7 +50,7 @@ async def create_client(
         })
 
     try:
-        uc = ClientManagementServices(db_session)
+        uc = ClientService(db_session)
         credentials = uc.create_client()
 
         return templates.TemplateResponse("create_client_url.html", {
@@ -110,7 +110,7 @@ async def update_client_secret(
             })
 
         # Atualiza o secret do client
-        uc = ClientManagementServices(db_session)
+        uc = ClientService(db_session)
         result = uc.update_client_secret(client_id=client_id)
 
         # Gerar token JWT com o ID do client

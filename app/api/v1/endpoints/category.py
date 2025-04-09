@@ -7,7 +7,7 @@ from typing import Optional, Type
 from app.api.deps import get_session, get_current_user
 from app.security.permissions import require_permission
 
-from app.services.category_services import CategoryServices
+from app.services.category_service import CategoryService
 from app.core.config import settings
 from app.schemas.category_schemas import (
     CategoryCreate,
@@ -28,10 +28,8 @@ from app.db.models.pet_category_model import (
 router = APIRouter()  # Esta linha é essencial!
 
 # Define the main router for all category routes
-category_router = APIRouter(
-    prefix="/categories",
-    dependencies=[Depends(get_current_user)]
-)
+category_router = APIRouter(dependencies=[Depends(get_current_user)])
+
 
 # Config for all category types
 CATEGORY_CONFIG = [
@@ -122,7 +120,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"add_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc.create_category(category)
 
     @router.get(
@@ -139,7 +137,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"list_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc.list_categories(skip, limit, is_active)
 
     @router.get(
@@ -154,7 +152,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"view_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc._get_by_id(category_id)
 
     @router.put(
@@ -171,7 +169,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"update_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc.update_category(category_id, category)
 
     @router.delete(
@@ -187,7 +185,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"delete_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc.delete_category(category_id)
 
     @router.patch(
@@ -204,7 +202,7 @@ def register_category_routes(
             db: Session = Depends(get_session),
             _: bool = Depends(require_permission(f"update_{permission_prefix}")),
     ):
-        uc = CategoryServices(db, model_class)
+        uc = CategoryService(db, model_class)
         return uc.toggle_status(category_id, active)
 
 

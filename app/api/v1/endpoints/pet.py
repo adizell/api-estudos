@@ -15,7 +15,7 @@ from typing import Optional
 from uuid import UUID
 
 from app.api.deps import get_session, get_current_user
-from app.services.pet_services import PetServices
+from app.services.pet_service import PetService
 from app.db.models.pet_model import Pet
 from app.db.models.user.user_model import User
 from app.security.permissions import require_permission
@@ -34,7 +34,7 @@ from app.db.models.pet_category_model import (
     PetCategorySize,
     PetCategoryAge,
 )
-from app.core.middleware.exceptions import (
+from app.core.exceptions import (
     PermissionDeniedException,
 )
 
@@ -42,11 +42,7 @@ from app.core.middleware.exceptions import (
 logger = logging.getLogger(__name__)
 
 # Definir o router com dependência global
-router = APIRouter(
-    prefix="/pet",
-    tags=["Pet"],
-    dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.post(
@@ -66,7 +62,7 @@ async def add_pet(
         db: Session = Depends(get_session),
 ):
     logger.info(f"Cadastrando pet para usuário: {user.email}")
-    uc = PetServices(db_session=db)
+    uc = PetService(db_session=db)
     return uc.add_pet(
         name=pet.name,
         specie_id=pet.specie_id,
@@ -209,7 +205,7 @@ async def get_pet_by_id(
         PermissionDeniedException: Se o usuário não for o dono do pet (a menos que seja superusuário)
     """
     logger.info(f"Obtendo pet {pet_id} para usuário: {user.email}")
-    uc = PetServices(db_session=db_session)
+    uc = PetService(db_session=db_session)
     pet = uc._get_pet_by_id(pet_id)
 
     # Verifica se o usuário tem acesso a este pet
@@ -256,7 +252,7 @@ async def update_pet(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Atualizando pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetServices(db_session=db_session)
+    pet_uc = PetService(db_session=db_session)
     return pet_uc.update_pet(pet_id, pet_input, current_user.id)
 
 
@@ -293,7 +289,7 @@ async def delete_pet(
         DatabaseOperationException: Se houver erro ao excluir do banco
     """
     logger.info(f"Excluindo pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetServices(db_session=db_session)
+    pet_uc = PetService(db_session=db_session)
     return pet_uc.delete_pet(pet_id, current_user.id)
 
 
@@ -345,7 +341,7 @@ async def update_pet_categories(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Atualizando categorias do pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetServices(db_session=db_session)
+    pet_uc = PetService(db_session=db_session)
 
     # Constrói o dicionário de categorias com os valores não nulos
     categories = {}

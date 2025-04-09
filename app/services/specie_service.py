@@ -1,20 +1,20 @@
-# app/services/specie_services.py
+# app/services/specie_service.py
 """
-Casos de uso para operações com Espécies.
+Serviço para gerenciamento de espécies.
 
-Este módulo contém a lógica de negócios relacionada à manipulação
-de entidades Specie, integrando com o banco de dados e aplicando regras de negócio.
+Este módulo implementa o serviço para operações com espécies,
+incluindo criação, listagem, atualização e exclusão.
 """
 
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from app.utils.input_validation import validate_and_sanitize_slug, InputValidator
 
 from app.db.models.specie_model import Specie
 from app.schemas.specie_schemas import SpecieCreate, SpecieUpdate
-from app.core.middleware.exceptions import (
+from app.utils.input_validation import validate_and_sanitize_slug, InputValidator
+from app.core.exceptions import (
     ResourceNotFoundException,
     ResourceAlreadyExistsException,
     DatabaseOperationException,
@@ -25,17 +25,17 @@ from app.core.middleware.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class SpecieServices:
+class SpecieService:
     """
-    Casos de uso para operações com Espécies.
+    Serviço para gerenciamento de espécies.
 
-    Esta classe implementa toda a lógica de negócios relacionada
-    à manipulação de entidades Specie, como adicionar, listar, atualizar e excluir.
+    Esta classe implementa a lógica de negócios relacionada à
+    manipulação de entidades Specie, como adicionar, listar, atualizar e excluir.
     """
 
     def __init__(self, db_session: Session):
         """
-        Inicializa o caso de uso com uma sessão de banco de dados.
+        Inicializa o serviço com uma sessão de banco de dados.
 
         Args:
             db_session: Sessão SQLAlchemy ativa

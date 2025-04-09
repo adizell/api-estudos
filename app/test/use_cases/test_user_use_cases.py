@@ -6,7 +6,7 @@ from fastapi.exceptions import HTTPException
 from passlib.context import CryptContext
 from app.schemas.user_schema import User
 from app.db.models import User as UserModel
-from app.services.user_services import UserServices
+from app.services.user_service import UserService
 
 crypt_context = CryptContext(schemes=['sha256_crypt'])
 
@@ -19,7 +19,7 @@ def test_register_user(db_session):
         username='Adilson',
         password='pass#'
     )
-    uc = UserServices(db_session)
+    uc = UserService(db_session)
     uc.register_user(user=user)
     user_on_db = db_session.query(UserModel).first()
     assert user_on_db is not None
@@ -37,7 +37,7 @@ def test_register_user_username_already_exists(db_session):
     )
     db_session.add(user_on_db)
     db_session.commit()
-    uc = UserServices(db_session)
+    uc = UserService(db_session)
     user = User(
         username='Adilson',
         password=crypt_context.hash('pass#')
@@ -50,7 +50,7 @@ def test_register_user_username_already_exists(db_session):
 
 
 def test_user_login(db_session, user_on_db):
-    uc = UserServices(db_session=db_session)
+    uc = UserService(db_session=db_session)
 
     user = User(
         username=user_on_db.username,
@@ -63,7 +63,7 @@ def test_user_login(db_session, user_on_db):
 
 
 def test_user_login_invalid_username(db_session, user_on_db):
-    uc = UserServices(db_session=db_session)
+    uc = UserService(db_session=db_session)
 
     user = User(
         username='Invalid',
@@ -75,7 +75,7 @@ def test_user_login_invalid_username(db_session, user_on_db):
 
 
 def test_user_login_invalid_password(db_session, user_on_db):
-    uc = UserServices(db_session=db_session)
+    uc = UserService(db_session=db_session)
 
     user = User(
         username=user_on_db.username,
@@ -87,7 +87,7 @@ def test_user_login_invalid_password(db_session, user_on_db):
 
 
 def test_verify_token(db_session, user_on_db):
-    uc = UserServices(db_session=db_session)
+    uc = UserService(db_session=db_session)
 
     data = {
         'sub': user_on_db.username,
@@ -100,7 +100,7 @@ def test_verify_token(db_session, user_on_db):
 
 
 def test_verify_token_expired(db_session, user_on_db):
-    uc = UserServices(db_session=db_session)
+    uc = UserService(db_session=db_session)
 
     data = {
         'sub': user_on_db.username,

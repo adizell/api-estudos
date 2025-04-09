@@ -1,9 +1,9 @@
-# app/core/exceptions.py
+# app/core/middleware/exception_middleware.py
 """
-Exceções personalizadas para o aplicativo.
+Middleware para tratamento centralizado de exceções.
 
-Este módulo define exceções específicas da aplicação que fornecem
-mensagens de erro significativas e códigos de status HTTP apropriados.
+Este módulo define um middleware que intercepta exceções e formata
+respostas de erro adequadas para o cliente.
 """
 
 import time
@@ -18,6 +18,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from starlette.middleware.base import BaseHTTPMiddleware
 from jose.exceptions import JWTError, ExpiredSignatureError
 
+from app.core.exceptions import RGAException
 from app.core.config import settings
 
 # Configurar logger
@@ -235,39 +236,3 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
                 return match.group(1)
 
         return None
-
-
-class RequestLoggingMiddleware(BaseHTTPMiddleware):
-    """
-    Middleware para logging de requisições.
-    Registra informações sobre cada requisição recebida.
-    """
-
-    async def dispatch(self, request: Request, call_next):
-        # Log da requisição - com informações limitadas em produção
-        if settings.ENVIRONMENT == "production":
-            logger.info(f"Requisição: {request.method} {request.url.path}")
-        else:
-            # Em desenvolvimento, pode incluir mais detalhes como query params
-            query_params = dict(request.query_params)
-            logger.info(
-                f"Requisição: {request.method} {request.url.path} | "
-                f"Query: {query_params if query_params else 'N/A'} | "
-                f"Cliente: {request.client.host if request.client else 'N/A'}"
-            )
-
-        # Processa a requisição
-        start_time = time.time()
-        response = await call_next(request)
-        process_time = time.time() - start_time
-
-        # Log da resposta
-        if settings.ENVIRONMENT == "production":
-            logger.info(f"Resposta: {response.status_code} para {request.method} {request.url.path}")
-        else:
-            logger.info(
-                f"Resposta: {response.status_code} para {request.method} {request.url.path} | "
-                f"Tempo: {process_time:.4f}s"
-            )
-
-        return response

@@ -14,7 +14,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate as sqlalchemy_paginate
 from typing import Optional
 
 from app.api.deps import get_session, get_current_user
-from app.services.specie_services import SpecieServices
+from app.services.specie_service import SpecieService
 from app.db.models.user.user_model import User
 from app.db.models.specie_model import Specie
 from app.security.permissions import require_permission
@@ -31,11 +31,7 @@ from app.schemas.specie_schemas import (
 logger = logging.getLogger(__name__)
 
 # Definir o router com dependência global
-router = APIRouter(
-    prefix="/specie",
-    tags=["Specie"],
-    dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.post(
@@ -72,7 +68,7 @@ async def add_specie(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Cadastrando espécie por usuário: {current_user.email}")
-    uc = SpecieServices(db_session)
+    uc = SpecieService(db_session)
     return uc.add_specie(specie_input=specie)
 
 
@@ -156,7 +152,7 @@ async def get_specie_by_id(
         ResourceNotFoundException: Se a espécie não for encontrada
     """
     logger.info(f"Obtendo espécie {specie_id} para usuário: {current_user.email}")
-    uc = SpecieServices(db_session)
+    uc = SpecieService(db_session)
     return uc._get_specie_by_id(specie_id)
 
 
@@ -197,7 +193,7 @@ async def update_specie(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Atualizando espécie {specie_id} por usuário: {current_user.email}")
-    uc = SpecieServices(db_session)
+    uc = SpecieService(db_session)
     return uc.update_specie(specie_id, specie_input)
 
 
@@ -238,7 +234,7 @@ async def toggle_specie_status(
     """
     action = "ativando" if status_data.is_active else "desativando"
     logger.info(f"{action} espécie {specie_id} por usuário: {current_user.email}")
-    uc = SpecieServices(db_session)
+    uc = SpecieService(db_session)
     return uc.toggle_specie_status(specie_id, status_data.is_active)
 
 
@@ -277,7 +273,7 @@ async def delete_specie(
                                     se houver pets associados à espécie
     """
     logger.info(f"Excluindo espécie {specie_id} por usuário: {current_user.email}")
-    uc = SpecieServices(db_session)
+    uc = SpecieService(db_session)
     return uc.delete_specie(specie_id)
 
 

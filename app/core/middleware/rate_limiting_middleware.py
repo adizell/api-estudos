@@ -1,4 +1,4 @@
-# app/core/rate_limiting.py
+# app/core/middleware/rate_limiting_middleware.py
 """
 Middleware para limitação de taxa de requisições (rate limiting).
 
