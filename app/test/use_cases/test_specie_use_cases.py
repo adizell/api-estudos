@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 
 from app.db.connection import Session
-from app.use_cases.specie_use_cases import SpecieUseCases
+from app.services.specie_services import SpecieServices
 from app.schemas.specie_schemas import SpecieCreate, SpecieUpdate
 
 
 def test_add_duplicate_specie(db_session):
-    use_case = SpecieUseCases(db_session)
+    use_case = SpecieServices(db_session)
 
     specie_data = SpecieCreate(name="Cat")
 
@@ -23,7 +23,7 @@ def test_add_duplicate_specie(db_session):
 
 
 def test_delete_existing_specie(db_session: Session):
-    use_case = SpecieUseCases(db_session)
+    use_case = SpecieServices(db_session)
 
     specie_data = SpecieCreate(name="Dog")
     specie = use_case.add_specie(specie_data=specie_data)
@@ -37,7 +37,7 @@ def test_delete_existing_specie(db_session: Session):
 
 
 def test_update_existing_specie(db_session):
-    use_case = SpecieUseCases(db_session)
+    use_case = SpecieServices(db_session)
 
     specie_data = SpecieCreate(name="Fish")
     specie = use_case.add_specie(specie_data=specie_data)

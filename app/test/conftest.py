@@ -7,7 +7,7 @@ from app.db.models import Pet as PetModel
 from app.db.models import User as UserModel
 import pytest
 
-# from app.use_cases.user_use_cases import crypt_context
+# from app.services.user_use_cases import crypt_context
 
 crypt_context = CryptContext(schemes=['sha256_crypt'])
 

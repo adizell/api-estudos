@@ -1,4 +1,4 @@
-# app/routes/pet_routes.py
+# app/routes/pet.py
 """
 Rotas para gerenciamento de Pets.
 
@@ -14,8 +14,8 @@ from fastapi_pagination.ext.sqlalchemy import paginate as sqlalchemy_paginate
 from typing import Optional
 from uuid import UUID
 
-from app.routes.deps import get_session, get_current_user
-from app.use_cases.pet_use_cases import PetUseCases
+from app.api.deps import get_session, get_current_user
+from app.services.pet_services import PetServices
 from app.db.models.pet_model import Pet
 from app.db.models.user.user_model import User
 from app.security.permissions import require_permission
@@ -34,7 +34,7 @@ from app.db.models.pet_category_model import (
     PetCategorySize,
     PetCategoryAge,
 )
-from app.core.exceptions import (
+from app.core.middleware.exceptions import (
     PermissionDeniedException,
 )
 
@@ -66,7 +66,7 @@ async def add_pet(
         db: Session = Depends(get_session),
 ):
     logger.info(f"Cadastrando pet para usuário: {user.email}")
-    uc = PetUseCases(db_session=db)
+    uc = PetServices(db_session=db)
     return uc.add_pet(
         name=pet.name,
         specie_id=pet.specie_id,
@@ -141,6 +141,41 @@ async def list_user_pets(
 
 
 @router.get(
+    "/categories",
+    summary="Get Pet Categories - Obter todas as categorias de pet",
+    description="Retorna todas as categorias ativas para seleção no cadastro de pet.",
+)
+async def get_pet_categories(
+        db_session: Session = Depends(get_session),
+        user: User = Depends(get_current_user),
+        _: bool = Depends(require_permission("list_pets"))
+):
+    # Buscar todas as categorias ativas de cada tipo
+    environment_categories = db_session.query(PetCategoryEnvironment).filter(
+        PetCategoryEnvironment.is_active == True).all()
+    condition_categories = db_session.query(PetCategoryCondition).filter(PetCategoryCondition.is_active == True).all()
+    purpose_categories = db_session.query(PetCategoryPurpose).filter(PetCategoryPurpose.is_active == True).all()
+    habitat_categories = db_session.query(PetCategoryHabitat).filter(PetCategoryHabitat.is_active == True).all()
+    origin_categories = db_session.query(PetCategoryOrigin).filter(PetCategoryOrigin.is_active == True).all()
+    size_categories = db_session.query(PetCategorySize).filter(PetCategorySize.is_active == True).all()
+    age_categories = db_session.query(PetCategoryAge).filter(PetCategoryAge.is_active == True).all()
+
+    # Converter para dicionários básicos com id e nome
+    def to_dict_list(categories):
+        return [{"id": cat.id, "name": cat.name} for cat in categories]
+
+    return {
+        "environment": to_dict_list(environment_categories),
+        "condition": to_dict_list(condition_categories),
+        "purpose": to_dict_list(purpose_categories),
+        "habitat": to_dict_list(habitat_categories),
+        "origin": to_dict_list(origin_categories),
+        "size": to_dict_list(size_categories),
+        "age": to_dict_list(age_categories),
+    }
+
+
+@router.get(
     "/{pet_id}",
     response_model=PetOutput,
     status_code=status.HTTP_200_OK,
@@ -174,7 +209,7 @@ async def get_pet_by_id(
         PermissionDeniedException: Se o usuário não for o dono do pet (a menos que seja superusuário)
     """
     logger.info(f"Obtendo pet {pet_id} para usuário: {user.email}")
-    uc = PetUseCases(db_session=db_session)
+    uc = PetServices(db_session=db_session)
     pet = uc._get_pet_by_id(pet_id)
 
     # Verifica se o usuário tem acesso a este pet
@@ -221,7 +256,7 @@ async def update_pet(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Atualizando pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetUseCases(db_session=db_session)
+    pet_uc = PetServices(db_session=db_session)
     return pet_uc.update_pet(pet_id, pet_input, current_user.id)
 
 
@@ -258,43 +293,8 @@ async def delete_pet(
         DatabaseOperationException: Se houver erro ao excluir do banco
     """
     logger.info(f"Excluindo pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetUseCases(db_session=db_session)
+    pet_uc = PetServices(db_session=db_session)
     return pet_uc.delete_pet(pet_id, current_user.id)
-
-
-@router.get(
-    "/categories",
-    summary="Get Pet Categories - Obter todas as categorias de pet",
-    description="Retorna todas as categorias ativas para seleção no cadastro de pet.",
-)
-async def get_pet_categories(
-        db_session: Session = Depends(get_session),
-        user: User = Depends(get_current_user),
-        _: bool = Depends(require_permission("list_pets"))
-):
-    # Buscar todas as categorias ativas de cada tipo
-    environment_categories = db_session.query(PetCategoryEnvironment).filter(
-        PetCategoryEnvironment.is_active == True).all()
-    condition_categories = db_session.query(PetCategoryCondition).filter(PetCategoryCondition.is_active == True).all()
-    purpose_categories = db_session.query(PetCategoryPurpose).filter(PetCategoryPurpose.is_active == True).all()
-    habitat_categories = db_session.query(PetCategoryHabitat).filter(PetCategoryHabitat.is_active == True).all()
-    origin_categories = db_session.query(PetCategoryOrigin).filter(PetCategoryOrigin.is_active == True).all()
-    size_categories = db_session.query(PetCategorySize).filter(PetCategorySize.is_active == True).all()
-    age_categories = db_session.query(PetCategoryAge).filter(PetCategoryAge.is_active == True).all()
-
-    # Converter para dicionários básicos com id e nome
-    def to_dict_list(categories):
-        return [{"id": cat.id, "name": cat.name} for cat in categories]
-
-    return {
-        "environment": to_dict_list(environment_categories),
-        "condition": to_dict_list(condition_categories),
-        "purpose": to_dict_list(purpose_categories),
-        "habitat": to_dict_list(habitat_categories),
-        "origin": to_dict_list(origin_categories),
-        "size": to_dict_list(size_categories),
-        "age": to_dict_list(age_categories),
-    }
 
 
 @router.patch(
@@ -345,7 +345,7 @@ async def update_pet_categories(
         DatabaseOperationException: Se houver erro ao salvar no banco
     """
     logger.info(f"Atualizando categorias do pet {pet_id} para usuário: {current_user.email}")
-    pet_uc = PetUseCases(db_session=db_session)
+    pet_uc = PetServices(db_session=db_session)
 
     # Constrói o dicionário de categorias com os valores não nulos
     categories = {}

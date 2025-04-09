@@ -1,10 +1,9 @@
 # app/security/permissions.py
 
-from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 
-from app.routes.deps import get_session, get_current_user
+from app.api.deps import get_session, get_current_user
 from app.db.models.user.user_model import User
 
 

@@ -1,4 +1,4 @@
-# app/use_cases/client_management_usecases.py
+# app/services/client_management_services.py
 
 import secrets
 import logging
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-class ClientManagementUseCases:
+class ClientManagementServices:
     """
     Use cases para operações administrativas relacionadas aos clients.
     Permite criar novos clients e atualizar a chave secreta.

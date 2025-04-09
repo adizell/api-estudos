@@ -1,4 +1,4 @@
-# app/core/csrf_protection.py
+# app/core/csrf.py
 """
 Middleware para proteção contra ataques CSRF (Cross-Site Request Forgery).
 

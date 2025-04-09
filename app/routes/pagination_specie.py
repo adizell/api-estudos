@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi_pagination import Page, LimitOffsetPage, add_pagination
 from fastapi_pagination.ext.sqlalchemy import paginate as sqlalchemy_paginate
 
-from app.routes.deps import get_db_session
+from app.api.deps import get_db_session
 from app.security.permissions import require_permission_or_superuser
 from app.db.models.specie_model import Specie
 from app.db.models.user.user_model import User

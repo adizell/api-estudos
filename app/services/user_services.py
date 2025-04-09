@@ -1,4 +1,4 @@
-# app/use_cases/user_use_cases.py
+# app/services/user_services.py
 
 from uuid import UUID
 from sqlalchemy.orm import Session
@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class UserUseCases:
+class UserServices:
     def __init__(self, db_session: Session):
         self.db = db_session
 

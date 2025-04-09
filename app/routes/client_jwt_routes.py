@@ -1,12 +1,12 @@
 # app/routes/client_jwt_routes.py
-from fastapi import APIRouter, Depends, Request, Form, HTTPException, status
+from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import SQLAlchemyError
 import logging
 
-from app.routes.deps import get_db_session
+from app.api.deps import get_db_session
 from app.security.token_store import TokenStore
 from app.security.auth_client_manager import ClientAuthManager
 from app.db.models.client_model import Client

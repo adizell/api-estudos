@@ -1,4 +1,4 @@
-# app/use_cases/category_use_cases.py
+# app/services/category_services.py
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -10,7 +10,7 @@ from app.db.models.pet_category_model import PetCategoryBase
 from app.schemas.category_schemas import CategoryCreate, CategoryUpdate
 
 
-class CategoryUseCases:
+class CategoryServices:
     """
     Generic class for handling CRUD operations on category models.
     This class can be used with any category model that inherits from PetCategoryBase.

@@ -1,13 +1,13 @@
 import pytest
 from datetime import datetime
-from app.use_cases.pet_use_cases import PetUseCases
+from app.services.pet_services import PetServices
 from app.schemas.pet_schemas import PetCreate, PetUpdate
 from app.db.models import Pet as PetModel, Specie as SpecieModel
 from fastapi import HTTPException
 
 
 def test_add_pet_uc(db_session, species_on_db):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
 
     # Aqui, o species_on_db deve ter pelo menos uma espécie
     assert len(species_on_db) > 0, "A lista de espécies está vazia!"
@@ -39,7 +39,7 @@ def test_add_pet_uc(db_session, species_on_db):
 
 
 def test_add_pet_uc_invalid_specie(db_session):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
 
     pet_data = PetCreate(
         name="Ghost",
@@ -67,7 +67,7 @@ def test_add_pet_uc_invalid_specie(db_session):
 
 
 def test_update_pet(db_session, species_on_db):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
     specie = species_on_db[0]
 
     pet_data = PetCreate(
@@ -112,7 +112,7 @@ def test_update_pet(db_session, species_on_db):
 
 
 def test_update_pet_invalid_id(db_session):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
 
     update_data = PetUpdate(
         name="Non-existent Pet",
@@ -135,7 +135,7 @@ def test_update_pet_invalid_id(db_session):
 
 
 def test_delete_pet(db_session, species_on_db):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
     specie = species_on_db[0]
 
     pet_data = PetCreate(
@@ -166,7 +166,7 @@ def test_delete_pet(db_session, species_on_db):
 
 
 def test_delete_pet_non_exist(db_session):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
 
     with pytest.raises(HTTPException) as excinfo:
         use_case.delete_pet(id=9999)  # ID inexistente
@@ -176,7 +176,7 @@ def test_delete_pet_non_exist(db_session):
 
 
 def test_list_pets(db_session, species_on_db):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
     specie = species_on_db[0]
 
     pet_names = ["Katarina", "Tilina", "Insti", "Dim"]
@@ -208,7 +208,7 @@ def test_list_pets(db_session, species_on_db):
 
 
 def test_list_pets_with_search(db_session, species_on_db):
-    use_case = PetUseCases(db_session)
+    use_case = PetServices(db_session)
     specie = species_on_db[0]
 
     pet_names = ["Katarina", "Tilina", "Insti", "Dim"]

@@ -11,11 +11,11 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.routes.deps import get_session, get_current_user
+from app.api.deps import get_session, get_current_user
 from app.db.models.user.user_model import User
 from app.security.permissions import require_permission
 from app.schemas.specie_schemas import SpecieOutput
-from app.use_cases.specie_use_cases import SpecieUseCases
+from app.services.specie_services import SpecieServices
 
 # Configurar logger
 logger = logging.getLogger(__name__)
@@ -56,6 +56,6 @@ async def list_active_species(
         Lista de espécies ativas ordenadas por nome
     """
     logger.info(f"Listando espécies ativas para usuário: {current_user.email}")
-    uc = SpecieUseCases(db_session)
+    uc = SpecieServices(db_session)
     # Filtra apenas espécies ativas
     return uc.list_species(is_active=True)

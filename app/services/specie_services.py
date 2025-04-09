@@ -1,4 +1,4 @@
-# app/use_cases/specie_use_cases.py
+# app/services/specie_services.py
 """
 Casos de uso para operações com Espécies.
 
@@ -14,7 +14,7 @@ from app.utils.input_validation import validate_and_sanitize_slug, InputValidato
 
 from app.db.models.specie_model import Specie
 from app.schemas.specie_schemas import SpecieCreate, SpecieUpdate
-from app.core.exceptions import (
+from app.core.middleware.exceptions import (
     ResourceNotFoundException,
     ResourceAlreadyExistsException,
     DatabaseOperationException,
@@ -25,7 +25,7 @@ from app.core.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class SpecieUseCases:
+class SpecieServices:
     """
     Casos de uso para operações com Espécies.
 

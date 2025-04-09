@@ -1,9 +1,8 @@
-# app/core/exceptions.py
+# app/core/logging.py
 """
-Exceções personalizadas para o aplicativo.
+Middlewares da aplicação.
 
-Este módulo define exceções específicas da aplicação que fornecem
-mensagens de erro significativas e códigos de status HTTP apropriados.
+Este módulo contém middlewares para tratamento de exceções, logging, etc.
 """
 
 from fastapi import HTTPException, status

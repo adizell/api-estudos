@@ -1,4 +1,4 @@
-# app/use_cases/pet_use_cases.py
+# app/services/pet_services.py
 """
 Casos de uso para operações com Pets.
 
@@ -19,9 +19,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.db.models.specie_model import Specie
 from app.db.models.pet_model import Pet
 from app.schemas.pet_schemas import PetUpdate, PetCreate
-from app.core.exceptions import (
+from app.core.middleware.exceptions import (
     ResourceNotFoundException,
-    ResourceAlreadyExistsException,
     DatabaseOperationException,
     PermissionDeniedException,
     InvalidInputException
@@ -31,7 +30,7 @@ from app.core.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class PetUseCases:
+class PetServices:
     """
     Casos de uso para operações com Pets.
 

@@ -6,12 +6,17 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
-from app.routes.category_routes import category_router
-from app.core.middleware import ExceptionMiddleware, RequestLoggingMiddleware
+from app.api.v1.endpoints.category import category_router
 from app.routes.species_active_routes import router as species_active_router
-from app.core.security_headers import SecurityHeadersMiddleware
-from app.core.csrf_protection import CSRFProtectionMiddleware
-from app.core.rate_limiting import RateLimitingMiddleware
+from app.core.middleware import (
+    ExceptionMiddleware,
+    RequestLoggingMiddleware,
+    CSRFProtectionMiddleware,
+    RateLimitingMiddleware,
+    SecurityHeadersMiddleware
+)
+
+from app.api.v1.router import api_router as api_v1_router
 
 # Configuração de logging
 logging.basicConfig()
@@ -25,9 +30,9 @@ app = FastAPI(
 )
 
 # Importar routers após criar a instância do app
-from app.routes.specie_routes import router as specie_routes
-from app.routes.pet_routes import router as pet_routes
-from app.routes.user_routes import router as user_routes
+from app.api.v1.endpoints.specie import router as specie_routes
+from app.api.v1.endpoints.pet import router as pet_routes
+from app.api.v1.endpoints.user import router as user_routes
 from app.routes.client_jwt_routes import router as client_jwt_router
 from app.routes.client_url_routes import create_url_router, update_url_router
 from app.routes.pagination_specie import router as pag_species_routes
@@ -70,6 +75,8 @@ async def redoc():
 async def redirect_to_docs():
     return get_swagger_ui_html(openapi_url=app.openapi_url, title=app.title)
 
+# Incluir o novo router v1
+app.include_router(api_v1_router, prefix="/api/v1")
 
 # Incluir todos os routers
 app.include_router(client_jwt_router)

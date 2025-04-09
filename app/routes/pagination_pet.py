@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi_pagination import Page, LimitOffsetPage, add_pagination
 from fastapi_pagination.ext.sqlalchemy import paginate as sqlalchemy_paginate
 
-from app.routes.deps import get_db_session, get_current_user
+from app.api.deps import get_db_session, get_current_user
 from app.db.models.pet_model import Pet
 from app.db.models.user.user_model import User
 from app.schemas.pet_schemas import PetOutput

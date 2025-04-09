@@ -6,7 +6,7 @@ Este módulo exporta exceções, configurações e utilitários core.
 """
 
 # Exportar todas as exceções para facilitar a importação
-from app.core.exceptions import (
+from app.core.middleware.exceptions import (
     RGAException,
     ResourceNotFoundException,
     ResourceAlreadyExistsException,

@@ -1,4 +1,4 @@
-# app/use_cases/client_use_cases.py
+# app/services/client_services.py
 
 from datetime import timedelta
 from sqlalchemy.orm import Session
@@ -7,7 +7,7 @@ from app.db.models.client_model import Client
 from app.security.auth_client_manager import ClientAuthManager
 
 
-class ClientUseCases:
+class ClientServices:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
