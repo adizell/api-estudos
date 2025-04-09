@@ -1,4 +1,4 @@
-# app/routes/category.py
+# app/api/v1/endpoints/category.py
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -37,49 +37,49 @@ CATEGORY_CONFIG = [
         "route_prefix": "/environment",
         "model": PetCategoryEnvironment,
         "permission_prefix": "category_environment",
-        "tag": "Category Environment"
+        "tag": "Environment"
     },
     {
         "name": "Condition",
         "route_prefix": "/condition",
         "model": PetCategoryCondition,
         "permission_prefix": "category_condition",
-        "tag": "Category Condition"
+        "tag": "Condition"
     },
     {
         "name": "Purpose",
         "route_prefix": "/purpose",
         "model": PetCategoryPurpose,
         "permission_prefix": "category_purpose",
-        "tag": "Category Purpose"
+        "tag": "Purpose"
     },
     {
         "name": "Habitat",
         "route_prefix": "/habitat",
         "model": PetCategoryHabitat,
         "permission_prefix": "category_habitat",
-        "tag": "Category Habitat"
+        "tag": "Habitat"
     },
     {
         "name": "Origin",
         "route_prefix": "/origin",
         "model": PetCategoryOrigin,
         "permission_prefix": "category_origin",
-        "tag": "Category Origin"
+        "tag": "Origin"
     },
     {
         "name": "Size",
         "route_prefix": "/size",
         "model": PetCategorySize,
         "permission_prefix": "category_size",
-        "tag": "Category Size"
+        "tag": "Size"
     },
     {
         "name": "Age",
         "route_prefix": "/age",
         "model": PetCategoryAge,
         "permission_prefix": "category_age",
-        "tag": "Category Age"
+        "tag": "Age"
     }
 ]
 
@@ -110,8 +110,8 @@ def register_category_routes(
         include_in_schema=settings.SCHEMA_VISIBILITY,
         response_model=CategoryOutput,
         status_code=status.HTTP_201_CREATED,
-        summary=f"Create {category_name} Category",
-        description=f"Create a new {category_name.lower()} category. Requires authentication with 'add_{permission_prefix}' permission.",
+        summary=f"Create {category_name}",
+        description=f"Create a new {category_name.lower()}. Requires authentication with 'add_{permission_prefix}' permission.",
         tags=[tag]
     )
     def create_category(
@@ -125,8 +125,8 @@ def register_category_routes(
     @router.get(
         f"{route_prefix}",
         response_model=CategoryListOutput,
-        summary=f"List {category_name} Categories",
-        description=f"List all {category_name.lower()} categories. Requires authentication with 'list_{permission_prefix}' permission.",
+        summary=f"List {category_name}s",
+        description=f"List all {category_name.lower()}s. Requires authentication with 'list_{permission_prefix}' permission.",
         tags=[tag]
     )
     def list_categories(
@@ -142,8 +142,8 @@ def register_category_routes(
     @router.get(
         f"{route_prefix}/{{category_id}}",
         response_model=CategoryOutput,
-        summary=f"Get {category_name} Category",
-        description=f"Get a specific {category_name.lower()} category by ID. Requires authentication with 'view_{permission_prefix}' permission.",
+        summary=f"Get {category_name}",
+        description=f"Get a specific {category_name.lower()} by ID. Requires authentication with 'view_{permission_prefix}' permission.",
         tags=[tag]
     )
     def get_category(
@@ -158,8 +158,8 @@ def register_category_routes(
         f"{route_prefix}/{{category_id}}",
         include_in_schema=settings.SCHEMA_VISIBILITY,
         response_model=CategoryOutput,
-        summary=f"Update {category_name} Category",
-        description=f"Update a specific {category_name.lower()} category. Requires authentication with 'update_{permission_prefix}' permission.",
+        summary=f"Update {category_name}",
+        description=f"Update a specific {category_name.lower()}. Requires authentication with 'update_{permission_prefix}' permission.",
         tags=[tag]
     )
     def update_category(
@@ -175,8 +175,8 @@ def register_category_routes(
         f"{route_prefix}/{{category_id}}",
         include_in_schema=settings.SCHEMA_VISIBILITY,
         status_code=status.HTTP_200_OK,
-        summary=f"Delete {category_name} Category",
-        description=f"Delete a specific {category_name.lower()} category. Requires authentication with 'delete_{permission_prefix}' permission.",
+        summary=f"Delete {category_name}",
+        description=f"Delete a specific {category_name.lower()}. Requires authentication with 'delete_{permission_prefix}' permission.",
         tags=[tag]
     )
     def delete_category(
@@ -191,8 +191,8 @@ def register_category_routes(
         f"{route_prefix}/{{category_id}}/status",
         include_in_schema=settings.SCHEMA_VISIBILITY,
         response_model=CategoryOutput,
-        summary=f"Toggle {category_name} Category Status",
-        description=f"Toggle the active status of a {category_name.lower()} category. Requires authentication with 'update_{permission_prefix}' permission.",
+        summary=f"Toggle {category_name} Status",
+        description=f"Toggle the active status of a {category_name.lower()}. Requires authentication with 'update_{permission_prefix}' permission.",
         tags=[tag]
     )
     def toggle_category_status(
